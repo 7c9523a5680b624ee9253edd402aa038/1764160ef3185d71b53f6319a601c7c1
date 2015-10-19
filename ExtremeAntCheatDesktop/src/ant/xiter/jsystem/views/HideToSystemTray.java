@@ -2,6 +2,7 @@ package ant.xiter.jsystem.views;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
@@ -51,7 +52,8 @@ public class HideToSystemTray{
             trayIcon.setImageAutoSize(true);
        
             frame.addWindowStateListener(new WindowStateListener() {
-            public void windowStateChanged(WindowEvent e) {
+            @SuppressWarnings("static-access")
+			public void windowStateChanged(WindowEvent e) {
                 if(e.getNewState()==frame.ICONIFIED){
                     try {
 //                        tray.add(trayIcon);

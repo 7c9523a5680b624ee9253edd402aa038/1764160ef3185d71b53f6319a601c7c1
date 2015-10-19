@@ -1,0 +1,14 @@
+====== GuitHub =========
+
+username: MD5(extremeantcheat) = 7c9523a5680b624ee9253edd402aa038
+email:extreme.killers10@gmail.com
+senha:extremeantcheat258456
+
+guitgub web:https:https://github.com/7c9523a5680b624ee9253edd402aa038/1764160ef3185d71b53f6319a601c7c1.git
+guithub desktop:https://github.com/7c9523a5680b624ee9253edd402aa038/1ee29be87545d7efdffd7bb2441b6ead.git
+
+ExtremeAntCheat-Web: 1764160ef3185d71b53f6319a601c7c1
+ExtremeAntCheat-Desktop: 1ee29be87545d7efdffd7bb2441b6ead
+
+
+http://wiki.eclipse.org/EGit/FAQ#Where_can_I_find_older_releases_of_EGit.3F
