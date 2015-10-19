@@ -1,6 +1,5 @@
 package com.extremekillers.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -11,7 +10,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
@@ -66,20 +64,24 @@ public class CadastroUsuarioController implements Serializable {
 			return;
 		}
 		
-		byte[] img = Util.decreaseSizeImg(this.foto.getInputstream(), 400, 200);
-		FileUtils.writeByteArrayToFile(new File("teste.png"), img);
-
-		//		String projeto = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
-//		usuario.convertiInputStremToByte(foto.getInputstream(), foto.getSize());
-//		usuario.setSerialPlayerId(serialPlayer.getId());
-//		if(usuarioBO.save(usuario, projeto).getId() != null){
-//			this.redenderizaFoto = true;
-//			byte[] fotoBase64= Base64.encodeBase64(usuario.getFotoByte());
-//			usuario.setFoto("data:image/png;base64,"+new String(fotoBase64));
-//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Inscrição realizada com sucesso !",""));
-//		}else{
-//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erro ao realizar a inscrição !",""));
-//		}
+		byte[] img = null;
+		if(usuarioBO.isRenderizaImagem(this.foto.getSize())){
+			img = Util.decreaseSizeImg(this.foto.getInputstream(), 800, 600);
+			usuario.setFotoByte(img);
+		}else{
+			usuario.convertiInputStremToByte(this.foto.getInputstream(), this.foto.getSize());
+		}
+		
+		String projeto = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+		usuario.setSerialPlayerId(serialPlayer.getId());
+		if(usuarioBO.save(usuario, projeto).getId() != null){
+			this.redenderizaFoto = true;
+			byte[] fotoBase64= Base64.encodeBase64(usuario.getFotoByte());
+			usuario.setFoto("data:image/png;base64,"+new String(fotoBase64));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Inscrição realizada com sucesso !",""));
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Erro ao realizar a inscrição !",""));
+		}
 	}
 
 	public void voltarIndex() throws IOException {

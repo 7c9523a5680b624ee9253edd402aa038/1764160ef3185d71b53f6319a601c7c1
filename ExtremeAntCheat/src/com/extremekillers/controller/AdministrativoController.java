@@ -6,16 +6,20 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.primefaces.context.RequestContext;
@@ -40,6 +44,7 @@ import com.extremekillers.util.Util;
 public class AdministrativoController implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	private static final String EXTREME_ANT_CHEAT = "ExtremeAntCheat";
 	
 	private String email,senha,siglaParaHash,totalHoraContadorTempo = "";
 	private AdministrativoBO administrativoBO;
@@ -299,10 +304,51 @@ public class AdministrativoController implements Serializable{
 		HttpServletRequest request = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest());
 		if("admin".equals(request.getParameter("token"))){
 			RequestContext.getCurrentInstance().execute("PF('admin_login_paienl').show();");
-			//RequestContext.getCurrentInstance().execute("PF('blackList').show();");
+//			if(!existeCookies()){
+//			}else{
+//				
+//			}
 		}else if("admin-system".equals(request.getParameter("token"))){
 			RequestContext.getCurrentInstance().execute("PF('login-admin-system').show();");
 		}
+	}
+	
+	private void getCoockiesAdmin(Cookie cookie){
+		String jsonObjetcAdmin = cookie.getValue();
+	}
+	
+	public boolean existeCookies(){
+        HttpServletRequest getRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
+		List<Cookie> cookies = new ArrayList<>();
+		cookies = Arrays.asList(getRequest.getCookies());
+		String ip = administrativoBO.getIpClient((HttpServletRequest)FacesContext.getCurrentInstance());
+
+		if(cookies.isEmpty() && cookies != null){
+			for (Cookie ck : cookies) {  
+			     if (ck.getName() != null && ck.getName().equals(String.format(ip.concat("s%"), EXTREME_ANT_CHEAT))) {
+			    	 this.getCoockiesAdmin(ck);
+			    	 return true;  
+			     }  
+	         }
+		}
+		return false;
+	}
+	
+	public void createCookiesAdmin(HttpSession session, HttpServletRequest request){
+		FacesContext context = FacesContext.getCurrentInstance();  
+        HttpSession sessao = (HttpSession) context.getExternalContext().getSession(true);  
+        HttpServletRequest getRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
+		
+        String ip = administrativoBO.getIpClient((HttpServletRequest)FacesContext.getCurrentInstance());
+        
+		Locale locale = getRequest.getLocale();  
+		Cookie cookie = new Cookie(ip+"-ExtremeAntCheat", locale.toString());  
+        cookie.setComment("Cash para armazenar informacoes do admin");  
+        cookie.setMaxAge(60 * 60 * 24 * 30); // expira em 1 mês  
+        cookie.setDomain(".localhost:8080/");  
+        cookie.setPath("/");  
+        cookie.setVersion(1);  
+        ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(cookie);  
 	}
 	
 	public void closedDialog(CloseEvent event){

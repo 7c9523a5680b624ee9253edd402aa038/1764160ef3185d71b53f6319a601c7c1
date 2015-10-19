@@ -11,9 +11,14 @@ import com.extremekillers.entity.Usuario;
 public class UsuarioBO {
 	
 	private UsuarioDAO usuarioDAO;
+	private static final long TAMANHO_IAMGEM = 500000;
 	
 	public UsuarioBO() {
 		usuarioDAO = new UsuarioDAO();
+	}
+	
+	public boolean isRenderizaImagem(Long size){
+		return size > TAMANHO_IAMGEM;
 	}
 
 	public Usuario save(Usuario usuario,String projeto) throws Exception {

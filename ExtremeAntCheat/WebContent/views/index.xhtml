@@ -7,6 +7,10 @@
 			    xmlns:p="http://primefaces.org/ui" >
 			    
 	<ui:define name="conteudoSite">
+		<p:dialog widgetVar="mdldesejoadquirir" header="Contato" modal="true">
+			<h2>Em construção!</h2>
+		</p:dialog>
+	
 		<h2>Porque devo ultilizar o Extreme AntCheat
 			<!-- 
 			<li><a title="Inscrevace-se para campionato" href="cadastro-campeonato.xhtml">Inscreva-se para campeonato</a></li>
@@ -44,19 +48,22 @@
 					<li>
 						<img src="../resources/css/images/closedbeta.png" width="981" height="420" />						
 						<div class="caption">
-							<p><span></span><a class="watch-now" title="Watch Now!" href="#">Watch Now!</a></p>							
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>							
 						</div>
 					</li>
 					<li>
 						<img src="../resources/css/images/carousel01.png" width="981" height="420" />
 						<div class="caption">
-							<p><span></span><a class="watch-now" title="Watch Now!" href="#">Watch Now!</a></p>			
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>				
 						</div>
 					</li>
 					 <li>
 						<img src="../resources/css/images/carousel02.png" width="981" height="420" />
 						<div class="caption">
-							<p><span></span><a class="watch-now" title="Watch Now!" href="#">Watch Now!</a></p>
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>	
 						</div>
 					</li>
 				</ul>				

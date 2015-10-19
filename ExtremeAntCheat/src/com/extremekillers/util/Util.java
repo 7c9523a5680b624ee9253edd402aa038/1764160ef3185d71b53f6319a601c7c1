@@ -1,16 +1,16 @@
 package com.extremekillers.util;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
 
 public class Util {
 	
@@ -62,28 +62,28 @@ public class Util {
 		}
 	}
 	
-	public static byte[] decreaseSizeImg(byte[] imagem, int width, int height) throws IOException {
-		BufferedImage imagemBuffer = ImageIO.read(Util.byteArrayToInpuStream(imagem));  
-		Image image = imagemBuffer.getScaledInstance(width, height, imagemBuffer.getType());  
-		imagemBuffer = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
-			ImageIO.write(imagemBuffer, "PNG", baos);
-			return baos.toByteArray();
-		}
-	}
-	
 	public static byte[] decreaseSizeImg(InputStream imagem, int width, int height) throws IOException {
-		BufferedImage imagemBuffer = ImageIO.read(imagem);  
-		Image image = imagemBuffer.getScaledInstance(width, height, imagemBuffer.getType());  
-		imagemBuffer = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-		try(ByteArrayOutputStream baos = new ByteArrayOutputStream()){
-			ImageIO.write(imagemBuffer, "PNG", baos);
-			return baos.toByteArray();
+		ImgTools imgTools = new ImgTools(imagem);
+		imgTools.resize(width, height);
+		File fileTemp = File.createTempFile("Create imagem temp", "PNG");
+		try(OutputStream escritor = new FileOutputStream(fileTemp)){
+			imgTools.setOutputImage(escritor, 0.75f);
+		}
+		Util.timeOut(5000);
+		
+		return FileUtils.readFileToByteArray(fileTemp);
+	}
+
+	public static void timeOut(long timeInillis) {
+		try{
+			Thread.sleep(timeInillis);;
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	
 	/*public static String gerarHashMD5 () throws Exception {  
-		String senha = "FCW-ExtremeKillers";
+		String senha = "FCW-Extreme Killers";
 		MessageDigest md = MessageDigest.getInstance("MD5");  
 	    BigInteger hash = new BigInteger(1, md.digest(senha.getBytes()));  
 	    String crypto = hash.toString(16);  

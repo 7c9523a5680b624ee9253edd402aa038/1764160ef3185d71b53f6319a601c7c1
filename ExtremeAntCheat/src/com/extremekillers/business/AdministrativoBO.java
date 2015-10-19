@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.extremekillers.dao.AdministrativoDAO;
@@ -28,6 +29,17 @@ public class AdministrativoBO {
 		}catch (IOException io) {
 			io.printStackTrace();
 		}
+	}
+	
+	public String getIpClient(HttpServletRequest request){
+		String ipAddress = request.getHeader("x-forwarded-for");
+		if (ipAddress == null) {
+		    ipAddress = request.getHeader("X_FORWARDED_FOR");
+		    if (ipAddress == null){
+		        ipAddress = request.getRemoteAddr();
+		    }
+		}
+		return ipAddress;
 	}
 	
 	public Admin autenticar(String email, String senha) {
