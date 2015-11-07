@@ -1,0 +1,872 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.2.10
+-- Dumped by pg_dump version 9.2.10
+-- Started on 2015-11-07 02:03:27
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 194 (class 3079 OID 11727)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2059 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 168 (class 1259 OID 16385)
+-- Name: admin; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE admin (
+    id integer NOT NULL,
+    email character varying(255),
+    senha character varying(255),
+    serial_player_id integer
+);
+
+
+ALTER TABLE public.admin OWNER TO postgres;
+
+--
+-- TOC entry 169 (class 1259 OID 16391)
+-- Name: admin_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE admin_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.admin_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2060 (class 0 OID 0)
+-- Dependencies: 169
+-- Name: admin_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE admin_id_seq OWNED BY admin.id;
+
+
+--
+-- TOC entry 170 (class 1259 OID 16393)
+-- Name: admin_system; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE admin_system (
+    id integer NOT NULL,
+    login character varying(255),
+    senha character varying(255)
+);
+
+
+ALTER TABLE public.admin_system OWNER TO postgres;
+
+--
+-- TOC entry 171 (class 1259 OID 16399)
+-- Name: admin_system_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE admin_system_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.admin_system_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2061 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: admin_system_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE admin_system_id_seq OWNED BY admin_system.id;
+
+
+--
+-- TOC entry 172 (class 1259 OID 16401)
+-- Name: campeonato; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE campeonato (
+    id integer NOT NULL,
+    camp_on boolean
+);
+
+
+ALTER TABLE public.campeonato OWNER TO postgres;
+
+--
+-- TOC entry 173 (class 1259 OID 16404)
+-- Name: campeonato_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE campeonato_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.campeonato_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2062 (class 0 OID 0)
+-- Dependencies: 173
+-- Name: campeonato_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE campeonato_id_seq OWNED BY campeonato.id;
+
+
+--
+-- TOC entry 174 (class 1259 OID 16406)
+-- Name: comando_antxiter_trom; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE comando_antxiter_trom (
+    id integer NOT NULL,
+    comando integer,
+    usuario_id integer
+);
+
+
+ALTER TABLE public.comando_antxiter_trom OWNER TO postgres;
+
+--
+-- TOC entry 175 (class 1259 OID 16409)
+-- Name: comando_antxiter_trom_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE comando_antxiter_trom_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.comando_antxiter_trom_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2063 (class 0 OID 0)
+-- Dependencies: 175
+-- Name: comando_antxiter_trom_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE comando_antxiter_trom_id_seq OWNED BY comando_antxiter_trom.id;
+
+
+--
+-- TOC entry 176 (class 1259 OID 16411)
+-- Name: contador_tempo; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE contador_tempo (
+    id integer NOT NULL,
+    inicio timestamp with time zone,
+    termino timestamp with time zone,
+    serial_player_id integer,
+    inicio_admin_id integer,
+    termino_admin_id integer,
+    total_horas character varying(10)
+);
+
+
+ALTER TABLE public.contador_tempo OWNER TO postgres;
+
+--
+-- TOC entry 2064 (class 0 OID 0)
+-- Dependencies: 176
+-- Name: COLUMN contador_tempo.inicio_admin_id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN contador_tempo.inicio_admin_id IS 'Administrador que inicio.';
+
+
+--
+-- TOC entry 177 (class 1259 OID 16414)
+-- Name: contador_tempo_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE contador_tempo_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.contador_tempo_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2065 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: contador_tempo_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE contador_tempo_id_seq OWNED BY contador_tempo.id;
+
+
+--
+-- TOC entry 178 (class 1259 OID 16416)
+-- Name: jogador_warface; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE jogador_warface (
+    id integer NOT NULL,
+    nome character varying(200) DEFAULT NULL::character varying,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    nick character varying(200) DEFAULT NULL::character varying,
+    sexo character(1) DEFAULT NULL::bpchar,
+    codigoantxiter character varying(255) DEFAULT NULL::character varying,
+    foto bytea,
+    data timestamp with time zone,
+    login_warface character varying(255)
+);
+
+
+ALTER TABLE public.jogador_warface OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 16427)
+-- Name: jogador_warface_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE jogador_warface_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.jogador_warface_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2066 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: jogador_warface_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE jogador_warface_id_seq OWNED BY jogador_warface.id;
+
+
+--
+-- TOC entry 180 (class 1259 OID 16429)
+-- Name: player_on; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE player_on (
+    id integer NOT NULL,
+    nome_player character varying(255) DEFAULT NULL::character varying,
+    ativo boolean,
+    data timestamp with time zone,
+    usuario_id integer,
+    numero_sala integer,
+    detalhes text,
+    serial_player_id integer
+);
+
+
+ALTER TABLE public.player_on OWNER TO postgres;
+
+--
+-- TOC entry 181 (class 1259 OID 16436)
+-- Name: player_on_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE player_on_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.player_on_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2067 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: player_on_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE player_on_id_seq OWNED BY player_on.id;
+
+
+--
+-- TOC entry 182 (class 1259 OID 16438)
+-- Name: return_comandos; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE return_comandos (
+    id integer NOT NULL,
+    dados bytea,
+    tipo integer,
+    usuario_id integer,
+    comando_antxiter_trom_id integer
+);
+
+
+ALTER TABLE public.return_comandos OWNER TO postgres;
+
+--
+-- TOC entry 2068 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: COLUMN return_comandos.tipo; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN return_comandos.tipo IS '1://Tira print
+2://copia todos processos';
+
+
+--
+-- TOC entry 183 (class 1259 OID 16444)
+-- Name: return_comandos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE return_comandos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.return_comandos_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2069 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: return_comandos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE return_comandos_id_seq OWNED BY return_comandos.id;
+
+
+--
+-- TOC entry 184 (class 1259 OID 16446)
+-- Name: serial_player; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE serial_player (
+    id integer NOT NULL,
+    serial_hash character varying(255),
+    remetente character varying(255),
+    numero_chaves integer,
+    status_servidor boolean,
+    tempo_liberado character varying(10)
+);
+
+
+ALTER TABLE public.serial_player OWNER TO postgres;
+
+--
+-- TOC entry 185 (class 1259 OID 16452)
+-- Name: serial_player_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE serial_player_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.serial_player_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2070 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: serial_player_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE serial_player_id_seq OWNED BY serial_player.id;
+
+
+--
+-- TOC entry 186 (class 1259 OID 16454)
+-- Name: servidor; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE servidor (
+    id integer NOT NULL,
+    ativo boolean
+);
+
+
+ALTER TABLE public.servidor OWNER TO postgres;
+
+--
+-- TOC entry 187 (class 1259 OID 16457)
+-- Name: servidor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE servidor_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.servidor_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2071 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: servidor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE servidor_id_seq OWNED BY servidor.id;
+
+
+--
+-- TOC entry 188 (class 1259 OID 16459)
+-- Name: usuario; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE usuario (
+    id integer NOT NULL,
+    nome character varying(200) DEFAULT NULL::character varying,
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    nick character varying(200) DEFAULT NULL::character varying,
+    sexo character(1) DEFAULT NULL::bpchar,
+    senha_ant_xiter character varying(255) DEFAULT NULL::character varying,
+    foto bytea,
+    data timestamp with time zone,
+    serial_player_id integer
+);
+
+
+ALTER TABLE public.usuario OWNER TO postgres;
+
+--
+-- TOC entry 189 (class 1259 OID 16470)
+-- Name: usuario_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE usuario_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.usuario_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2072 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: usuario_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE usuario_id_seq OWNED BY usuario.id;
+
+
+--
+-- TOC entry 190 (class 1259 OID 16472)
+-- Name: versao_sistema; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE versao_sistema (
+    id integer NOT NULL,
+    ultima_versao character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.versao_sistema OWNER TO postgres;
+
+--
+-- TOC entry 191 (class 1259 OID 16475)
+-- Name: versao_sistema_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE versao_sistema_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.versao_sistema_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2073 (class 0 OID 0)
+-- Dependencies: 191
+-- Name: versao_sistema_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE versao_sistema_id_seq OWNED BY versao_sistema.id;
+
+
+--
+-- TOC entry 192 (class 1259 OID 16477)
+-- Name: xiter; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE xiter (
+    id integer NOT NULL,
+    nome_xiter character varying(255),
+    nome_jogador character varying(255),
+    data_usa_xiter timestamp with time zone,
+    foto_xiter bytea,
+    descricao_processo text,
+    is_view_admin boolean,
+    descricao_pc character varying(255)
+);
+
+
+ALTER TABLE public.xiter OWNER TO postgres;
+
+--
+-- TOC entry 193 (class 1259 OID 16483)
+-- Name: xiter_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE xiter_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.xiter_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2074 (class 0 OID 0)
+-- Dependencies: 193
+-- Name: xiter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE xiter_id_seq OWNED BY xiter.id;
+
+
+--
+-- TOC entry 1890 (class 2604 OID 16485)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY admin ALTER COLUMN id SET DEFAULT nextval('admin_id_seq'::regclass);
+
+
+--
+-- TOC entry 1891 (class 2604 OID 16486)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY admin_system ALTER COLUMN id SET DEFAULT nextval('admin_system_id_seq'::regclass);
+
+
+--
+-- TOC entry 1892 (class 2604 OID 16487)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY campeonato ALTER COLUMN id SET DEFAULT nextval('campeonato_id_seq'::regclass);
+
+
+--
+-- TOC entry 1893 (class 2604 OID 16488)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY comando_antxiter_trom ALTER COLUMN id SET DEFAULT nextval('comando_antxiter_trom_id_seq'::regclass);
+
+
+--
+-- TOC entry 1894 (class 2604 OID 16489)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contador_tempo ALTER COLUMN id SET DEFAULT nextval('contador_tempo_id_seq'::regclass);
+
+
+--
+-- TOC entry 1900 (class 2604 OID 16490)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY jogador_warface ALTER COLUMN id SET DEFAULT nextval('jogador_warface_id_seq'::regclass);
+
+
+--
+-- TOC entry 1902 (class 2604 OID 16491)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY player_on ALTER COLUMN id SET DEFAULT nextval('player_on_id_seq'::regclass);
+
+
+--
+-- TOC entry 1903 (class 2604 OID 16492)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY return_comandos ALTER COLUMN id SET DEFAULT nextval('return_comandos_id_seq'::regclass);
+
+
+--
+-- TOC entry 1904 (class 2604 OID 16493)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY serial_player ALTER COLUMN id SET DEFAULT nextval('serial_player_id_seq'::regclass);
+
+
+--
+-- TOC entry 1905 (class 2604 OID 16494)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY servidor ALTER COLUMN id SET DEFAULT nextval('servidor_id_seq'::regclass);
+
+
+--
+-- TOC entry 1911 (class 2604 OID 16495)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY usuario ALTER COLUMN id SET DEFAULT nextval('usuario_id_seq'::regclass);
+
+
+--
+-- TOC entry 1912 (class 2604 OID 16496)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY versao_sistema ALTER COLUMN id SET DEFAULT nextval('versao_sistema_id_seq'::regclass);
+
+
+--
+-- TOC entry 1913 (class 2604 OID 16497)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY xiter ALTER COLUMN id SET DEFAULT nextval('xiter_id_seq'::regclass);
+
+
+--
+-- TOC entry 1923 (class 2606 OID 16499)
+-- Name: contador_tempo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY contador_tempo
+    ADD CONSTRAINT contador_tempo_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1917 (class 2606 OID 16501)
+-- Name: id_admin_system; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY admin_system
+    ADD CONSTRAINT id_admin_system PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1915 (class 2606 OID 16503)
+-- Name: pk_admin; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY admin
+    ADD CONSTRAINT pk_admin PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1919 (class 2606 OID 16505)
+-- Name: pk_campeonato; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY campeonato
+    ADD CONSTRAINT pk_campeonato PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1921 (class 2606 OID 16507)
+-- Name: pk_comando_antxiter_trom; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY comando_antxiter_trom
+    ADD CONSTRAINT pk_comando_antxiter_trom PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1925 (class 2606 OID 16509)
+-- Name: pk_jogador_warface; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY jogador_warface
+    ADD CONSTRAINT pk_jogador_warface PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1927 (class 2606 OID 16511)
+-- Name: pk_player_on; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY player_on
+    ADD CONSTRAINT pk_player_on PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1929 (class 2606 OID 16513)
+-- Name: pk_return_comandos; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY return_comandos
+    ADD CONSTRAINT pk_return_comandos PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1931 (class 2606 OID 16515)
+-- Name: pk_serial_player; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY serial_player
+    ADD CONSTRAINT pk_serial_player PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1933 (class 2606 OID 16517)
+-- Name: pk_servidor; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY servidor
+    ADD CONSTRAINT pk_servidor PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1935 (class 2606 OID 16519)
+-- Name: pk_usuario; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT pk_usuario PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1937 (class 2606 OID 16521)
+-- Name: pk_versao_sistema; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY versao_sistema
+    ADD CONSTRAINT pk_versao_sistema PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1939 (class 2606 OID 16523)
+-- Name: pk_xiter; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY xiter
+    ADD CONSTRAINT pk_xiter PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1941 (class 2606 OID 16524)
+-- Name: fk_admin_inicio; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contador_tempo
+    ADD CONSTRAINT fk_admin_inicio FOREIGN KEY (inicio_admin_id) REFERENCES admin(id);
+
+
+--
+-- TOC entry 1945 (class 2606 OID 16529)
+-- Name: fk_serial_player; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY usuario
+    ADD CONSTRAINT fk_serial_player FOREIGN KEY (serial_player_id) REFERENCES serial_player(id);
+
+
+--
+-- TOC entry 1940 (class 2606 OID 16534)
+-- Name: fk_serial_player; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY admin
+    ADD CONSTRAINT fk_serial_player FOREIGN KEY (serial_player_id) REFERENCES serial_player(id);
+
+
+--
+-- TOC entry 1944 (class 2606 OID 16539)
+-- Name: fk_serial_player; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY player_on
+    ADD CONSTRAINT fk_serial_player FOREIGN KEY (serial_player_id) REFERENCES serial_player(id);
+
+
+--
+-- TOC entry 1942 (class 2606 OID 16544)
+-- Name: fk_serial_player; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contador_tempo
+    ADD CONSTRAINT fk_serial_player FOREIGN KEY (serial_player_id) REFERENCES serial_player(id);
+
+
+--
+-- TOC entry 1943 (class 2606 OID 16549)
+-- Name: fk_termino_admin; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY contador_tempo
+    ADD CONSTRAINT fk_termino_admin FOREIGN KEY (termino_admin_id) REFERENCES admin(id);
+
+
+--
+-- TOC entry 2058 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2015-11-07 02:03:27
+
+--
+-- PostgreSQL database dump complete
+--
+
