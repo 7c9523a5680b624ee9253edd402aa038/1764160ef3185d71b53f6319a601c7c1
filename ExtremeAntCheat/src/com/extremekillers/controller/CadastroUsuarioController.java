@@ -50,12 +50,15 @@ public class CadastroUsuarioController implements Serializable {
 	
 	public void verificaChave(){
 		this.autenticado = new SerialPlayerBO().verificaChave(serialPlayer.getSerialHash());
-		if(autenticado){
-			RequestContext.getCurrentInstance().execute("PF('verificaChave').hide();");
-			serialPlayer = new SerialPlayerBO().findByHash(serialPlayer.getSerialHash());
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Chave inválida ou numero de contas chegou no limite!",""));
-		}
+		RequestContext.getCurrentInstance().execute("PF('verificaChave').hide();");
+		serialPlayer = new SerialPlayerBO().findByHash(serialPlayer.getSerialHash());
+//		if(autenticado){
+//			RequestContext.getCurrentInstance().execute("PF('verificaChave').hide();");
+//			serialPlayer = new SerialPlayerBO().findByHash(serialPlayer.getSerialHash());
+//		}else{
+//			FacesContext.getCurrentInstance().addMessage(null, new 
+//					FacesMessage(FacesMessage.SEVERITY_FATAL,"Chave inválida ou numero de contas chegou no limite!",""));
+//		}
 	}
 	
 	public void save() throws Exception {

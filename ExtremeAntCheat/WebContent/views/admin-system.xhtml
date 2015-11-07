@@ -12,14 +12,14 @@
 				<p:messages autoUpdate="true" id="msg-formulario-admin-system" /><br/>
 			
 				<p:outputLabel value="Login" /><br/>
-				<p:inputText value="#{administrativoController.email}" /><br/><br/>
+				<p:inputText value="#{administradorSystemController.email}" /><br/><br/>
 				
 				<p:outputLabel value="Senha" /><br/>
-				<p:password value="#{administrativoController.senha}" /><br/><br/>
+				<p:password value="#{administradorSystemController.senha}" /><br/><br/>
 				
 				<center>
 					<p:commandButton update="msg-formulario-admin-system" value="Autenticar" 
-						actionListener="#{administrativoController.loginAdminSystem()}" />
+						actionListener="#{administradorSystemController.loginAdminSystem()}" />
 				</center>
 			</h:form>	
 		</p:dialog>
@@ -27,11 +27,11 @@
 		<p:dialog header="Sorte Hash" widgetVar="mdl-sorte-hash">
 			<h:form>			
 				<p:outputLabel value="Digite a silga da liga para gerar o hash" /><br/>
-				<p:inputText style="width:214px" id="campo-sigla-hash" value="#{administrativoController.siglaParaHash}" /><br/><br/>
+				<p:inputText style="width:214px" id="campo-sigla-hash" value="#{administradorSystemController.siglaParaHash}" /><br/><br/>
 				
 				<center>
 					<p:commandButton value="Gerar" update=":formulario-painel-admin-system-liga" 
-						actionListener="#{administrativoController.gerarHashAtomatico()}" />
+						actionListener="#{administradorSystemController.gerarHashAtomatico()}" />
 				</center>
 			</h:form>
 		</p:dialog>
@@ -46,31 +46,31 @@
 							<h:panelGroup style="float:left;padding:0 18px 0 0">
 								<p:outputLabel value="Serial Hash" /><p:commandLink style="color:red" value=" Gerar hash"
 									 onclick="PF('mdl-sorte-hash').show();" /><br/>
-								<p:inputText value="#{administrativoController.serialPlayer.serialHash}" /><br/><br/>
+								<p:inputText value="#{administradorSystemController.serialPlayer.serialHash}" /><br/><br/>
 							</h:panelGroup>
 							
 							<h:panelGroup style="float:none">
 								<p:outputLabel value="Remetente" /><br/>
-								<p:inputText value="#{administrativoController.serialPlayer.remetente}" />
+								<p:inputText value="#{administradorSystemController.serialPlayer.remetente}" />
 							</h:panelGroup>
 					
 							<h:panelGroup style="float:left;margin:10px 0 0 0">
 								<p:outputLabel value="Numero de chaves" /><br/>
-								<p:inputText value="#{administrativoController.serialPlayer.numeroChaves}" /><br/><br/>
+								<p:inputText value="#{administradorSystemController.serialPlayer.numeroChaves}" /><br/><br/>
 							</h:panelGroup>	
 												
 							<h:panelGroup style="float:left;margin:-60px 0 0 0">								
 								<p:outputLabel value="Tempo liberado" /><br/>
-								<p:inputMask mask="99:99:99" value="#{administrativoController.serialPlayer.tempoLiberado}" />
+								<p:inputMask mask="99:99:99" value="#{administradorSystemController.serialPlayer.tempoLiberado}" />
 							</h:panelGroup>
 							
 							<center style="margin:106px">
-								<p:commandButton rendered="#{administrativoController.rederedViewSerialPlayerIsNotNull() == false}" 
+								<p:commandButton rendered="#{administradorSystemController.rederedViewSerialPlayerIsNotNull() == false}" 
 									update="formulario-painel-admin-system-liga,:tabelas-liga-admin,:formulario-painel-admin-system-admin" value="Cadastrar" 
-									actionListener="#{administrativoController.cadastraLiga()}" />
-								<p:commandButton rendered="#{administrativoController.rederedViewSerialPlayerIsNotNull()}" 
+									actionListener="#{administradorSystemController.cadastraLiga()}" />
+								<p:commandButton rendered="#{administradorSystemController.rederedViewSerialPlayerIsNotNull()}" 
 									update="formulario-painel-admin-system-liga,:tabelas-liga-admin,:formulario-painel-admin-system-admin" value="Ataulizar" 
-									actionListener="#{administrativoController.atualizaSerialPlayer()}" />
+									actionListener="#{administradorSystemController.atualizaSerialPlayer()}" />
 							</center>
 							
 						</p:fieldset>
@@ -79,27 +79,27 @@
 					<h:form id="formulario-painel-admin-system-admin">
 						<p:fieldset style="width:184px;" legend="Adicionar Admin Para Liga">
 							<p:outputLabel value="Email" /><br/>
-							<p:inputText value="#{administrativoController.admin.email}" required="true" requiredMessage="Campo Email obrigatio"/><br/><br/>
+							<p:inputText value="#{administradorSystemController.admin.email}" required="true" requiredMessage="Campo Email obrigatio"/><br/><br/>
 							
 							<p:outputLabel value="Senha" /><br/>
-							<p:inputText value="#{administrativoController.admin.senha}" required="true" requiredMessage="Campo Senha obrigatio"/><br/><br/>
+							<p:inputText value="#{administradorSystemController.admin.senha}" required="true" requiredMessage="Campo Senha obrigatio"/><br/><br/>
 							
 							<center>
-								<p:selectOneMenu value="#{administrativoController.admin.serialPlayerId}" filter="true" 
+								<p:selectOneMenu value="#{administradorSystemController.admin.serialPlayerId}" filter="true" 
 									filterMatchMode="startsWith" effect="fade" required="true" 
 									id="selectOneMenu-admin" requiredMessage="Campo Liga obrigatorio">
 									<f:selectItem itemLabel="Selecione a Liga" />
 			            			<f:selectItems itemLabel="#{item.remetente}" itemValue="#{item.id}" var="item" 
-			            				value="#{administrativoController.serialPlayers}" />
+			            				value="#{administradorSystemController.serialPlayers}" />
 								</p:selectOneMenu>
 							
 								<p:commandButton style="margin:27px 0 0 0" value="Cadastrar" 
-									rendered="#{administrativoController.rederedViewAdminIsNotNull() == false}"
-									actionListener="#{administrativoController.cadastrarAdmin()}" 
+									rendered="#{administradorSystemController.rederedViewAdminIsNotNull() == false}"
+									actionListener="#{administradorSystemController.cadastrarAdmin()}" 
 									update="formulario-painel-admin-system-admin,:tabelas-liga-admin" />
 								<p:commandButton style="margin:27px 0 0 0" value="Atualizar" 
-									rendered="#{administrativoController.rederedViewAdminIsNotNull()}"
-									actionListener="#{administrativoController.atualizaAdmin()}" 
+									rendered="#{administradorSystemController.rederedViewAdminIsNotNull()}"
+									actionListener="#{administradorSystemController.atualizaAdmin()}" 
 									update="formulario-painel-admin-system-admin,:tabelas-liga-admin" />	
 							</center>
 						</p:fieldset>
@@ -108,7 +108,7 @@
 				
 				<h:form id="tabelas-liga-admin">
 					<p:panel header="Tabelas" style="height:300px;overflow-y:scroll">
-						<p:dataTable id="mdl-serial-player" style="width:615px;float:right" value="#{administrativoController.serialPlayers}" var="item">
+						<p:dataTable id="mdl-serial-player" style="width:615px;float:right" value="#{administradorSystemController.serialPlayers}" var="item">
 							<f:facet name="header">
 		          			  Tabela de Ligas
 		       			 	</f:facet>
@@ -122,13 +122,13 @@
 								#{item.numeroChaves}
 							</p:column>
 							<p:column headerText="N C Usada">
-								#{administrativoController.getTotalContasUsadas(item.id)}
+								#{administradorSystemController.getTotalContasUsadas(item.id)}
 							</p:column>
 							<p:column headerText="Serial Hash">
 								#{item.serialHash}
 							</p:column>
 							<p:column headerText="Status Servidor">
-								#{administrativoController.getStatusServidorSerialPlayer(item.statusServidor)}
+								#{administradorSystemController.getStatusServidorSerialPlayer(item.statusServidor)}
 							</p:column>
 							<p:column headerText="Tempo liberado">
 								<p:outputLabel value="#{item.tempoLiberado}">
@@ -136,20 +136,20 @@
 								</p:outputLabel>
 							</p:column>
 							<p:column headerText="Tempo Utilizado">
-								<p:outputLabel value="#{administrativoController.getViewTableTotalHoraContadorTempo(item.id)}">
+								<p:outputLabel value="#{administradorSystemController.getViewTableTotalHoraContadorTempo(item.id)}">
 									<f:convertDateTime pattern="HH:mm:ss" />
 								</p:outputLabel>
 							</p:column>
 							<p:column headerText="Acoes">
 								<p:commandButton value="D" update="mdl-serial-player" immediate="true"
-									actionListener="#{administrativoController.deleteSerialPlayer(item.id)}">
+									actionListener="#{administradorSystemController.deleteSerialPlayer(item.id)}">
 									<p:confirm header="Confirmação" message="Deseja remover esta Liga" icon="ui-icon-alert" />
 								</p:commandButton>
 								<p:commandButton value="U" immediate="true" update=":formulario-painel-admin-system-liga"
-									actionListener="#{administrativoController.atualizaSerialPlayer(item)}" />
+									actionListener="#{administradorSystemController.atualizaSerialPlayer(item)}" />
 							</p:column>
 						</p:dataTable>
-						<p:dataTable id="tabela-admin" style="width:450px" value="#{administrativoController.admins}" var="item">
+						<p:dataTable id="tabela-admin" style="width:450px" value="#{administradorSystemController.admins}" var="item">
 							<f:facet name="header">
 		          			  Tabela de Admins
 		       			 	</f:facet>
@@ -167,11 +167,11 @@
 							</p:column>
 		       			 	<p:column style="width:30px" headerText="Acoes">
 		       			 		<p:commandButton value="D" update="tabela-admin" immediate="true"
-									action="#{administrativoController.deleteAdmin(item.id)}">
+									action="#{administradorSystemController.deleteAdmin(item.id)}">
 									<p:confirm header="Confirmação" message="Deseja remover este Admin" icon="ui-icon-alert" />
 								</p:commandButton>
 								<p:commandButton value="U" immediate="true" update=":formulario-painel-admin-system-admin"
-									actionListener="#{administrativoController.atualizaAdmin(item)}" />
+									actionListener="#{administradorSystemController.atualizaAdmin(item)}" />
 		       			 	</p:column>
 		       			</p:dataTable>	
 		       			<p:confirmDialog style="display:none" id="confirmaDialogo" global="true" showEffect="fade">

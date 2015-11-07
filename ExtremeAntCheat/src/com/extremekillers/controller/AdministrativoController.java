@@ -6,26 +6,26 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
+import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+
+import br.com.jcookies.cookieapi.CookieApi;
+import br.com.jcookies.enums.TimeSleep;
+import br.com.jcookies.generic.GenericCookie;
 
 import com.extremekillers.business.AdministrativoBO;
 import com.extremekillers.business.ContadorTempoBO;
@@ -37,7 +37,7 @@ import com.extremekillers.entity.ContadorTempo;
 import com.extremekillers.entity.JogadorWarface;
 import com.extremekillers.entity.Player;
 import com.extremekillers.entity.SerialPlayer;
-import com.extremekillers.util.Util;
+import com.google.gson.Gson;
 
 @ManagedBean
 @ViewScoped
@@ -45,6 +45,7 @@ public class AdministrativoController implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private static final String EXTREME_ANT_CHEAT = "ExtremeAntCheat";
+	private static final String EXTREME_ANT_CHEAT_TEMPORARIO = "ExtremeAntCheatTemporario";
 	
 	private String email,senha,siglaParaHash,totalHoraContadorTempo = "";
 	private AdministrativoBO administrativoBO;
@@ -61,6 +62,10 @@ public class AdministrativoController implements Serializable{
 	private List<JogadorWarface> blackList = new ArrayList<>();
 	private JogadorWarfaceBO jogadorWarfaceBO  = new JogadorWarfaceBO();
 	private String caminhoAudio = "";
+	private boolean checkBoxLogado = false;
+	private CookieApi cookieApi;
+	private boolean dialogIsOpen = false;
+	
 	
 	@PostConstruct
 	public void cosntrutor(){
@@ -72,13 +77,10 @@ public class AdministrativoController implements Serializable{
 		serialPlayerBO = new SerialPlayerBO();
 		admin = new Admin();
 		
-		this.restricao();
-		//this.modoDesenvolvimentoAdmin();
-		//this.modoDesenvolvimentoAdminSystem();
-
+		this.loadDatasViewAdmin();
 	}
 	
-	public void getBlackListAdminIsView(){
+	public void getBlackListAdminIsView() throws Exception{
 		blackList = jogadorWarfaceBO.findBlackListAdminIsView();
 		if(blackList != null && !blackList.isEmpty()){
 			jogadorWarfaceBO.updateIsViewAdmin(blackList);
@@ -96,40 +98,41 @@ public class AdministrativoController implements Serializable{
 		this.caminhoAudio = "/resources/audio/alarme.mp3";	
 	}
 	
-	public void cadastraLiga(){
-		boolean cadastrado = administrativoBO.cadastraLiga(serialPlayer);
-		if(cadastrado){
-			serialPlayer = new SerialPlayer();
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Liga Cadastrada Com Sucesso!",""));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,"Não foi possivel cadastrar!",""));
-		}
-	}
-	
-	public void loginAdminSystem(){
-		boolean autenticado = administrativoBO.autenticarAdminSystem(this.email, this.senha);
-		if(autenticado){
-			setSiglaParaHash("");
-			RequestContext.getCurrentInstance().execute("PF('login-admin-system').hide();PF('painel-admin-system').show();");
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"email ou senha incorreto.",""));
-		}
-	}
 
 	public void loginAdmin() throws IOException{
+		this.cookieApi = GenericCookie.getInstance(getRequest(), getResponse());
 		admin = administrativoBO.autenticar(this.email, this.senha);
+		
 		if(admin != null && admin.getSerialPlayerId() != null){
+			String jsonAdmin = new Gson().toJson(admin);
+			if(this.checkBoxLogado){
+				this.cookieApi.createCookiesCustom(jsonAdmin, "Cash para armazenar informacoes do admin", 
+						null, TimeSleep.VINTE_QUATRO_HORAS.getTime(), 1, EXTREME_ANT_CHEAT);
+			}
+			
+			this.cookieApi.createCookiesCustom(jsonAdmin, "Cash usuario Temp", null, TimeSleep.TIME_WHILE_LIVE_BROWSER.getTime(),
+					null, EXTREME_ANT_CHEAT_TEMPORARIO);
+			dialogIsOpen = true;
 			contadorTempo = new ContadorTempo();
 			contadorTempoBO = new ContadorTempoBO();
 			contadorTempo = contadorTempoBO.retornaUltimoContadorAtivo(admin.getSerialPlayerId());
 			this.serialPlayer = new SerialPlayerBO().findById(admin.getSerialPlayerId());
-			RequestContext.getCurrentInstance().execute("PF('admin_login_paienl').hide();PF('admin_painel').show();");
+ 			FacesContext.getCurrentInstance().getExternalContext().redirect("../views/admin.xhtml");
 		}else{
 			FacesContext.getCurrentInstance().addMessage(null, 
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,"email ou senha incorreto.",""));
 		}
+	}
+	
+	public void deslogar() throws IOException{
+		this.cookieApi = GenericCookie.getInstance(getRequest(), getResponse());
+		if(this.cookieApi.existCookieByName(EXTREME_ANT_CHEAT_TEMPORARIO) || 
+				this.cookieApi.existCookieByName(EXTREME_ANT_CHEAT)){
+			
+			this.cookieApi.removeCookie(EXTREME_ANT_CHEAT);
+			this.cookieApi.removeCookie(EXTREME_ANT_CHEAT_TEMPORARIO);
+		}
+		FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
 	}
 	
 	public void comandoThemaBasic(int usuario_id){
@@ -151,6 +154,8 @@ public class AdministrativoController implements Serializable{
 			
 			administrativoBO.deleteRetunrComando(usuario_id);
 			
+			printTela = null;
+			printTelaBytes = null;
 			RequestContext.getCurrentInstance().update("painel");
 			
 			//Atualiza a imagem PF('leitura_processo').show();
@@ -193,17 +198,6 @@ public class AdministrativoController implements Serializable{
 		administrativoBO.executaComandoFechaServidor(this.serialPlayer.getId());
 	}
 	
-	public void cadastrarAdmin(){
-		if(administrativoBO.cadastrarAdmin(admin)){
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Admin Cadastrado com sucesso!",""));
-			admin = new Admin();
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,"Não foi possivel cadastrar Admin!",""));
-		}
-	}
-
 	public void liberarServidorLiga(){
 		if(serialPlayerBO.isTempoAtingido(this.serialPlayer.getTempoLiberado(), 
 				this.serialPlayer.getId())){
@@ -237,122 +231,39 @@ public class AdministrativoController implements Serializable{
 	}
 	
 	public List<Player> getPlayers() throws Exception {
+		this.loadDatasViewAdmin();
 		return (this.serialPlayer != null && this.serialPlayer.getId() != null) ? 
 				new PlayerBO().findAll(this.serialPlayer.getId()) : new ArrayList<Player>();
 	}
 	
-	public void gerarHashAtomatico(){
-		this.serialPlayer.setSerialHash(Util.parseHashMD5(this.siglaParaHash));
-		RequestContext.getCurrentInstance().execute("PF('mdl-sorte-hash').hide();");
-	}
-	
-	public List<SerialPlayer> getSerialPlayers(){
-		return new SerialPlayerBO().findAll();
-	}
-	
-	public void deleteSerialPlayer(int id){
-		if(serialPlayerBO.delete(id)){
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Liga deletada com sucesso!",""));
+	private void loadDatasViewAdmin(){
+		this.cookieApi = GenericCookie.getInstance(getRequest(), getResponse());
+		if(this.cookieApi.existCookieByName(EXTREME_ANT_CHEAT_TEMPORARIO)){
+			this.admin =  new Gson().fromJson(this.cookieApi.getCookie(EXTREME_ANT_CHEAT_TEMPORARIO).getValue(), Admin.class);
+			
+			contadorTempo = new ContadorTempo();
+			contadorTempo = contadorTempoBO.retornaUltimoContadorAtivo(admin.getSerialPlayerId());
+			
+			this.serialPlayer = serialPlayerBO.findById(admin.getSerialPlayerId());
+			RequestContext.getCurrentInstance().execute("PF('admin_painel').show();");
+		}else if(this.cookieApi.existCookieByName(EXTREME_ANT_CHEAT)){
+			this.admin =  new Gson().fromJson(this.cookieApi.getCookie(EXTREME_ANT_CHEAT).getValue(), Admin.class);
+			
+			contadorTempo = new ContadorTempo();
+			contadorTempo = contadorTempoBO.retornaUltimoContadorAtivo(admin.getSerialPlayerId());
+			
+			this.serialPlayer = serialPlayerBO.findById(admin.getSerialPlayerId());
+			RequestContext.getCurrentInstance().execute("PF('admin_login_paienl').hide();PF('admin_painel').show();");
 		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,"Não foi possivel deletar a liga!",""));
-		}
-	}
-	
-	public void atualizaSerialPlayer(){
-		if(serialPlayerBO.update(serialPlayer)){
-			serialPlayer = new SerialPlayer();
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Serial Player Ataulizado com sucesso!",""));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-				new FacesMessage(FacesMessage.SEVERITY_INFO,"Não foi possivel atualizar Serial Player!",""));
-		}
-	}
-	
-	public void atualizaSerialPlayer(SerialPlayer serialPlayer){
-		this.serialPlayer = serialPlayer;
-	}
-	
-	public void deleteAdmin(int id){
-		if(administrativoBO.deleteAdmin(id)){
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Admin deletada com sucesso!",""));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,"Não foi possivel deletar o Admin!",""));
-		}
-	}
-	
-	public void atualizaAdmin(){
-		if(administrativoBO.updateAdmin(admin)){
-			admin = new Admin();
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Admin atualizado com sucesso!",""));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, 
-					new FacesMessage(FacesMessage.SEVERITY_INFO,"Não possivel atualizar admin!",""));
-		}
-	}
-	
-	public void atualizaAdmin(Admin admin){
-		this.admin = admin;
-	}
-	
-	public void restricao() {
-		HttpServletRequest request = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest());
-		if("admin".equals(request.getParameter("token"))){
 			RequestContext.getCurrentInstance().execute("PF('admin_login_paienl').show();");
-//			if(!existeCookies()){
-//			}else{
-//				
-//			}
-		}else if("admin-system".equals(request.getParameter("token"))){
-			RequestContext.getCurrentInstance().execute("PF('login-admin-system').show();");
 		}
-	}
-	
-	private void getCoockiesAdmin(Cookie cookie){
-		String jsonObjetcAdmin = cookie.getValue();
-	}
-	
-	public boolean existeCookies(){
-        HttpServletRequest getRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
-		List<Cookie> cookies = new ArrayList<>();
-		cookies = Arrays.asList(getRequest.getCookies());
-		String ip = administrativoBO.getIpClient((HttpServletRequest)FacesContext.getCurrentInstance());
-
-		if(cookies.isEmpty() && cookies != null){
-			for (Cookie ck : cookies) {  
-			     if (ck.getName() != null && ck.getName().equals(String.format(ip.concat("s%"), EXTREME_ANT_CHEAT))) {
-			    	 this.getCoockiesAdmin(ck);
-			    	 return true;  
-			     }  
-	         }
-		}
-		return false;
-	}
-	
-	public void createCookiesAdmin(HttpSession session, HttpServletRequest request){
-		FacesContext context = FacesContext.getCurrentInstance();  
-        HttpSession sessao = (HttpSession) context.getExternalContext().getSession(true);  
-        HttpServletRequest getRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(); 
 		
-        String ip = administrativoBO.getIpClient((HttpServletRequest)FacesContext.getCurrentInstance());
-        
-		Locale locale = getRequest.getLocale();  
-		Cookie cookie = new Cookie(ip+"-ExtremeAntCheat", locale.toString());  
-        cookie.setComment("Cash para armazenar informacoes do admin");  
-        cookie.setMaxAge(60 * 60 * 24 * 30); // expira em 1 mês  
-        cookie.setDomain(".localhost:8080/");  
-        cookie.setPath("/");  
-        cookie.setVersion(1);  
-        ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(cookie);  
 	}
 	
-	public void closedDialog(CloseEvent event){
+	public void handleClose(CloseEvent event){
+		System.out.println("TEste: " + event.getComponent().getId() + " closed" +"So you don't like nature?");
 		try{
+			System.out.println("TEste");
 			FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
 		}catch(IOException e){
 			e.printStackTrace();
@@ -399,24 +310,8 @@ public class AdministrativoController implements Serializable{
 		}
 	}
 	
-	public String getViewTableTotalHoraContadorTempo(int serialPlayerId){
-		return contadorTempoBO.getContadorTempoRelatorio(serialPlayerId).replace("Total de horas: ", "");
-	}
-	
 	public String indexRedirect(){
 		return "index.xhtml";
-	}
-	
-	public List<Admin> getAdmins(){
-		return administrativoBO.findAdminAll();
-	}
-	
-	public Integer getTotalContasUsadas(Integer id){
-		return id != null ? this.serialPlayerBO.getCountSerialToUsuarioId(id) : 0; 
-	}
-	
-	public String getStatusServidorSerialPlayer(boolean status){
-		return status ? "Ativo" : "Inativo";
 	}
 	
 	public boolean isNotNullRendered(String value){
@@ -429,14 +324,6 @@ public class AdministrativoController implements Serializable{
 	
 	public boolean isNotNullProcessosTela(){
 		return this.processosTela != null;
-	}
-	
-	public boolean rederedViewAdminIsNotNull(){
-		return admin.getId() != null;
-	}
-	
-	public boolean rederedViewSerialPlayerIsNotNull(){
-		return  serialPlayer.getId() != null;
 	}
 	
 	public String getEmail() {
@@ -533,6 +420,30 @@ public class AdministrativoController implements Serializable{
 	
 	public void setCaminhoAudio(String caminhoAudio) {
 		this.caminhoAudio = caminhoAudio;
+	}
+	
+	public boolean isCheckBoxLogado() {
+		return checkBoxLogado;
+	}
+
+	public void setCheckBoxLogado(boolean checkBoxLogado) {
+		this.checkBoxLogado = checkBoxLogado;
+	}
+	
+	public HttpServletRequest getRequest(){
+		return ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+	}
+	
+	public HttpServletResponse getResponse(){
+		return ((HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse());
+	}
+	
+	public boolean isDialogIsOpen() {
+		return dialogIsOpen;
+	}
+	
+	public void setDialogIsOpen(boolean dialogIsOpen) {
+		this.dialogIsOpen = dialogIsOpen;
 	}
 
 	public StreamedContent getFile() {

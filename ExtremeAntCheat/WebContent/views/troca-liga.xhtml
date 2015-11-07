@@ -1,0 +1,53 @@
+<ui:composition template="/template/template.xhtml" 
+				xmlns="http://www.w3.org/1999/xhtml"
+			    xmlns:composite="http://java.sun.com/jsf/composite"
+			    xmlns:ui="http://java.sun.com/jsf/facelets"
+			    xmlns:f="http://java.sun.com/jsf/core"
+			    xmlns:h="http://java.sun.com/jsf/html"
+			    xmlns:p="http://primefaces.org/ui" >
+			    
+	<ui:define name="conteudoSite">
+		<p:panel header="Troca de liga">
+			<h:form id="formulario-troca-liga">
+				<p:fieldset legend="Formulario de troca" style="width:211px;margin:19px 0 0 198px">
+					<p:messages autoUpdate="true" />
+				
+					<p:outputLabel value="Insira sua nova chave" /><br/>
+					<p:inputText id="nomeChave" required="true" requiredMessage="É obrigatorio a chave da liga"
+						value="#{trocaLigaController.serialHash}"><p:button id="imgButtomSucess"
+						style="float:right;margin-top:-2px;background:#5B99CF" 
+						rendered="#{trocaLigaController.isNotNullSerialPalyer()}" icon="ui-icon-circle-check" />
+						<p:ajax event="change" update="nomeChave,imgButtomSucess" listener="#{trocaLigaController.validaChave}" />
+					</p:inputText><br/>
+					
+					<p:spacer height="10" />
+						<p:separator />
+					<p:spacer height="10" /><br/>
+					<span style="margin-left:15px;color:#5B99CF">Para finalizar a troca insira </span>
+					<span style="margin:37px;color:#5B99CF">seu email e senha.</span>
+					<br/><br/>
+					
+					<p:outputLabel  value="Insira seu email" /><br/>
+					<p:inputText required="true" id="email-troca-liga" requiredMessage="É obrigatorio seu Email" 
+						value="#{trocaLigaController.email}" /><br/><br/>
+					<p:outputLabel value="Insira sua senha" /><br/>
+					<p:password id="senha-troca-liga" required="true" requiredMessage="É obrigatorio sua Senha" 
+						value="#{trocaLigaController.senha}" /><br/><br/>
+					
+					<p:commandButton style="margin:3px 0 21px 40px" value="Alterar Liga" 
+						actionListener="#{trocaLigaController.alterarChave()}" update="formulario-troca-liga" icon="ui-icon-pencil">
+						<p:confirm header="Confirmação" message="Você deseja alterar sua Chave?" icon="ui-icon-alert" />	
+					</p:commandButton><br/>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+	        			<center>
+	        				<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+	        				<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	    				</center>
+	    			</p:confirmDialog>
+					
+					
+				</p:fieldset>
+			</h:form>
+		</p:panel>	
+	</ui:define>
+</ui:composition>	

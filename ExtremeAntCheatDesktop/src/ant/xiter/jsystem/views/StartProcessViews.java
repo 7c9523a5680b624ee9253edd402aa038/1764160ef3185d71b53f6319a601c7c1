@@ -46,8 +46,8 @@ public class StartProcessViews extends JFrame {
 		this.setSize(399,399);
 		this.setSize(600,337);
 		
-		//Verfifica se ja tem um processo do AtnXiter ativo
-		this.verificaSeJaEstaABerto();
+		//Verfifica se ja tem um processo do AntXiter ativo
+		//this.verificaSeJaEstaABerto();
 		
 		//Carrega a barra de progresso e verifica se o servido esta on
 		this.progressBarShow();
@@ -126,9 +126,13 @@ public class StartProcessViews extends JFrame {
 					}
 					Util.JogadorWarfaceCreateLocalData(genericFrame.jogadorWarface);
 				}
+				if(i == 35){
+					
+				}
 				if(i == 40){
 					if(!new XitersDAOImpl().getServidorLiberado(Util.getJogadorWarface().getLigaRemetenteId())){
 						JOptionPane.showMessageDialog(null, "Sua liga ainda não liberou o servidor para monitoramento !");
+						Util.removeJogadorWarfaceLocal();
 						System.exit(0);
 					}
 				}

@@ -7,27 +7,55 @@
 			    xmlns:p="http://primefaces.org/ui" >
 			    
 	<ui:define name="conteudoSite">
-		<h2>Porque devira ultilizar o Extreme AntXiter
-				<!-- 
-				<li><a title="Inscrevace-se para campionato" href="cadastro-campeonato.xhtml">Inscreva-se para campeonato</a></li>
-				<li><a title="Tabela de jogadores" href="tabela-jogadores.xhtml">Tabela de jogadores</a></li>
-				 -->
-			</h2>
-				<p>
-					<strong>O sistema Extreme AntXiter é um antXiter que não precisa se injetar 
-						com Jogo ele trabalha ao lado do jogo protejendo contra processos maliciosos, monitorando serviços e movimentos no sistema. </strong>
-				</p>
-			
-			<strong>Oque o Extreme AntXiter Oferece:</strong>
-			<ul style="margin:18px">
-				<li style="height: 27px">Painel de controle para administradores</li>
-				<li style="height: 27px">O Usuario tem a opeção de fazer algumas operações manuais.</li>
-				<li style="height: 27px">Screenshots da tela e jogo </li>
-				<li style="height: 27px">Screenshots dos Processos/Serviços.</li>
-				<li style="height: 27px">Sistema Verifica Automaticamente Processos</li>
-				<li style="height: 27px">Sistema Verifica Automaticamente Serviços</li>
-				<li style="height: 27px">Detecção de injeção</li>
-			</ul>
+		<h2>Porque devo ultilizar o Extreme AntCheat
+			<!-- 
+			<li><a title="Inscrevace-se para campionato" href="cadastro-campeonato.xhtml">Inscreva-se para campeonato</a></li>
+			<li><a title="Tabela de jogadores" href="tabela-jogadores.xhtml">Tabela de jogadores</a></li>
+			 -->
+		</h2>
+			<p>
+				<strong>O sistema Extreme AntCheat  é um ant-cheats que não precisa se injetar 
+					com jogo ele trabalha ao lado do jogo protejendo contra processos maliciosos, monitorando serviços e movimentos no sistema. </strong>
+			</p>
+		
+		<strong>Oque o Extreme AntCheat Oferece:</strong>
+		<ul style="margin:18px">
+			<li style="height: 27px">Painel de controle para administradores</li>
+			<li style="height: 27px">O Usuario tem a opeção de fazer algumas operações manuais.</li>
+			<li style="height: 27px">Screenshots da tela e jogo </li>
+			<li style="height: 27px">Screenshots dos Processos/Serviços.</li>
+			<li style="height: 27px">Sistema Verifica Automaticamente Processos</li>
+			<li style="height: 27px">Sistema Verifica Automaticamente Serviços</li>
+			<li style="height: 27px">Detecção de injeção</li>
+		</ul>
+		<ui:define name="slide">
+		<div id="slider" class="flexslider">
+				<ul class="slides">
+					<li>
+						<img src="../resources/css/images/closedbeta.png" width="981" height="420" />						
+						<div class="caption">
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>							
+						</div>
+					</li>
+					<li>
+						<img src="../resources/css/images/carousel01.png" width="981" height="420" />
+						<div class="caption">
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>				
+						</div>
+					</li>
+					 <li>
+						<img src="../resources/css/images/carousel02.png" width="981" height="420" />
+						<div class="caption">
+							<p><span></span><p:commandLink styleClass="watch-now" 
+								value="Desejo Adquirir !" onclick="PF('mdldesejoadquirir').show()"/></p>	
+						</div>
+					</li>
+				</ul>				
+			</div>
+		</ui:define>
+		
 		<!-- Modeal grow de message filtra qual message -->
 		<p:outputPanel autoUpdate="true">
 			<p:growl autoUpdate="true"/>
@@ -57,7 +85,7 @@
 		<!-- Login Painel Administrador -->
 		<p:dialog widgetVar="admin_login_paienl" id="admin_login_paienl" header="Login para painel administrativo"
 			modal="true" draggable="false" closable="false">
-			<h:form>
+			<h:form id="formulario-login-adminnn">
 				<p:messages autoUpdate="true" id="msg-login-admin-painel" />
 				<center>
 					<p:outputLabel value="Email" /><br/>
@@ -66,8 +94,22 @@
 					<p:outputLabel value="Senha" /><br/>
 					<p:password value="#{administrativoController.senha}" /><br/><br/>
 					
-					<p:commandButton style="margin:0 5px 0 0" update=":painel,:tabelas-com-eventos,msg-login-admin-painel" value="Autenticar" actionListener="#{administrativoController.loginAdmin()}" />
-					<p:commandButton value="Sair" style="width:83px" ajax="false" action="#{administrativoController.indexRedirect()}"/>
+					<p:commandButton style="margin:0 5px 0 0" update=":painel,:tabelas-com-eventos,msg-login-admin-painel" 
+						onclick="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" 
+						value="Autenticar" action="#{administrativoController.loginAdmin()}" />
+					<p:commandButton value="Sair" style="width:83px" ajax="false" 
+						action="#{administrativoController.indexRedirect()}"/><br/><br/>
+
+					<p:selectBooleanCheckbox style="float:left;margin-left:14px" value="#{administrativoController.checkBoxLogado}">
+						 <p:ajax update="formulario-login-adminnn" />
+					</p:selectBooleanCheckbox>
+					<span style="margin:2px 0 0 5px;float:left;font-size:14px">Deseja manter se logado</span><br/><br/>	
+	
+					<h:panelGroup style="width:218px" layout="block" id="logado" rendered="#{administrativoController.checkBoxLogado}">
+						<p style="color:#367DB6;font-size:13px">Sua sessao tera apenas apenas 24hrs, apos isso seus 
+							usuario sera deslogado</p> 
+						<p style="color:#367DB6;font-size:13px;margin-top:-15px">automaticamente caso voce nao tenha deslogado.</p>
+					</h:panelGroup>
 				</center>			
 			</h:form>
 		 </p:dialog>
@@ -109,29 +151,34 @@
 	
 		<!-- Painel Administrador -->
 		<p:dialog widgetVar="admin_painel" width="1100" height="500" id="admin_painel" header="Painel administrativo"
-			 minimizable="true" maximizable="true">
+			 minimizable="true" maximizable="true" resizable="true">
+			 <p:ajax event="close" listener="#{administrativoController.handleClose}" />
 			<h:form id="painel">
 				<p:panel style="width:400px;float:left" header="Retorno do comando">
 					<p:messages autoUpdate="true" id="msg-painel-administrativo" />
 					<!-- Renderizar imagem do jogo do uaurio-->
 					<h:graphicImage id="image" width="380" height="300" value="#{administrativoController.printTela}" />
 					
-					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Print" type="button" icon="ui-icon-print" style="display:block;float:left;width:95px;margin-left:85px">
+					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Print" type="button" 
+						icon="ui-icon-print" style="display:block;float:left;width:95px;margin-left:85px">
 	   					 <p:printer target="image" />
 					</p:commandButton>
 					
-					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Download" ajax="false" icon="ui-icon-arrowthick-1-s">
+					<p:commandButton rendered="#{administrativoController.notNullPrintTelaBytes}" value="Download" 
+						ajax="false" icon="ui-icon-arrowthick-1-s">
 	      				<p:fileDownload value="#{administrativoController.file}" />
 	  				</p:commandButton>
 	  				
 	  				<center>
+	  					<h:panelGroup layout="block" id="textoExportTxt" rendered="#{administrativoController.notNullProcessosTela}">
+	  						<h3>Donwload do processo.txt</h3>
+	  					</h:panelGroup>
 		  				<p:commandButton action="#{administrativoController.exportTxt()}" rendered="#{administrativoController.notNullProcessosTela}" value="Download"
 		  					ajax="false" icon="ui-icon-arrowthick-1-s" />
 					</center>
-					
 				</p:panel>
 				
-				<p:panel header="Dados da liga" style="width:560px;float:right">
+				<p:panel header="Dados da liga" style="width:560px;height:244px;float:right">
 					<p:outputLabel value="Nome da Liga Responsavel: #{administrativoController.serialPlayer.remetente} |" />
 					<br/><p:outputLabel style="float:right;margin:-16px -10px 0 0px" 
 						value="Chave pra ativação :#{administrativoController.serialPlayer.serialHash}" />
@@ -147,18 +194,28 @@
 							<p:ajax listener="#{administrativoController.liberarServidorLiga()}" update="msg-status-servidor,msg-contador-tempo" />
 					</p:inputSwitch><br/>
 					
-					<p:outputLabel id="msg-contador-tempo" value="#{administrativoController.msgContadorTempo}" /><br/>
-					<p:commandButton style="float:right;margin:6px 0 0 100px" value="Ver Tabela do mes" 
+					<p:outputLabel id="msg-contador-tempo" style="display:block;height:85px"
+						 value="#{administrativoController.msgContadorTempo}" /><br/>
+					
+					<p:commandButton style="float:right;width:135px;margin:0 -5px 0 0" value="Deslogar" ajax="false"
+						action="#{administrativoController.deslogar()}" />
+					<p:commandButton style="float:right;margin:0 9px 0 0" value="Ver Tabela do mes"
+					 	onstart="PF('statusDialog').show();" oncomplete="PF('statusDialog').hide();" 
 						onclick="PF('mdl-tabelas-com-eventos').show();" actionListener="#{administrativoController.getContadorTemposBySerialPlayer()}"
 					    update=":tabelas-com-eventos"/>
+					    
+					<p:commandButton style="float:left;width:162px;margin:0 0 0 0" 
+						value="Atualizar Painel Admin" onclick="location.href='../views/admin.xhtml?token=admin'"/>    
 					
 				</p:panel><br/><br/>
 			
-				<p:poll interval="10" update="tabelaPlayerOn" listener="#{administrativoController.getBlackListAdminIsView()}" />
-				<p:dataTable id="tabelaPlayerOn" style="width:565px;float:right" value="#{administrativoController.players}" var="item">
-					 <f:facet name="header">
-	          			  Tabela de players online
-	       			 </f:facet>
+				<p:poll interval="10" update="tabelaPlayerOn"
+					listener="#{administrativoController.getBlackListAdminIsView()}" />
+				<p:dataTable id="tabelaPlayerOn" style="width:565px;float:right" 
+					value="#{administrativoController.players}" var="item">
+					<f:facet name="header">
+	          			Tabela de players online
+	       			</f:facet>
 					<p:column headerText="Id">
 						#{item.id}
 					</p:column>

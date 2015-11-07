@@ -102,7 +102,7 @@ public class UsuarioDAO {
 		}
 	}
 
-	public Usuario autentica(String senha, String email) {
+	public Usuario autentica(String email, String senha) {
 		try(Connection connection = FactoryConnectJDBC.getConnection();
 				PreparedStatement statement = connection.prepareStatement(SQL_SELECT_AUTENTICA)){
 			

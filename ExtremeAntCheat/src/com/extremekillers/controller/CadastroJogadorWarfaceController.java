@@ -30,7 +30,6 @@ public class CadastroJogadorWarfaceController implements Serializable {
 		jogadorWarfaceBO = new JogadorWarfaceBO();
 		
 		RequestContext.getCurrentInstance().execute("PF('modalRestricao').show()");
-		//this.bloquioView();
 	}
 	
 	@SuppressWarnings("unused")

@@ -13,6 +13,22 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.commons.io.FileUtils;
 
 public class Util {
+
+	public static String getNameProjetc(String realPath){
+		//System.out.println();
+		
+		realPath = realPath.replaceAll("\\\\", "&");
+		String[] projeto = realPath.split("&");
+		return projeto[projeto.length - 1];	
+	}
+	
+    public static boolean isJson(String value) {
+    	String[] pattener = {"{","}"};
+    	boolean parameterOne = String.valueOf(value.charAt(0)).equals(pattener[0]);
+    	boolean parameterTwo = String.valueOf(value.charAt(value.length())).equals(pattener[1]);
+    	
+    	return parameterOne && parameterTwo;
+	}
 	
 	public static String gerarHashMD5 (String senha) throws Exception {  
 	    MessageDigest md = MessageDigest.getInstance("MD5");  

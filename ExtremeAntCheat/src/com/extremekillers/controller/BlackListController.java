@@ -16,7 +16,7 @@ public class BlackListController {
 	private JogadorWarfaceBO jogadorWarfaceBO = new JogadorWarfaceBO();
 	
 	@PostConstruct
-	public void cosntrutor(){
+	public void cosntrutor() {
 		blackList = jogadorWarfaceBO.findByBlackList();
 	}
 	
