@@ -42,7 +42,6 @@ public class SystemTray {
     }
 
     private void createSystemTray() {
-        
         // Make sure you check for tray icon support first
         if (!java.awt.SystemTray.isSupported()) {
             System.out.println("SystemTray is not supported");

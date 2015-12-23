@@ -238,8 +238,9 @@
 					<p:column headerText="Acoes" style="width:100px"> 
 						<p:commandButton actionListener="#{administrativoController.comandoPrintDoUsuario(item.usuario_id)}"
 							 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Bater Print da tela do usuario" icon="ui-icon-image" />
-						<p:commandButton actionListener="#{administrativoController.comandoThemaBasic(item.usuario_id)}"
-							 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Muda o thema do usuario" icon="ui-icon-contact" />
+						<!-- Atualmente nao sera necessario pois a aplicacao desktop ira verificar o thema automaticamente.
+							<p:commandButton actionListener="#{administrativoController.comandoThemaBasic(item.usuario_id)}"
+							 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Muda o thema do usuario" icon="ui-icon-contact" /> -->
 						<p:commandButton actionListener="#{administrativoController.comandoCopieProcesso(item.usuario_id)}"
 						 onclick="PF('statusDialog').show();" update=":painel" oncomplete="PF('statusDialog').hide();" title="Carregar Processos" icon="ui-icon-document-b" />
 					</p:column>

@@ -1,7 +1,11 @@
 package ant.xiter.jsystem.business;
 
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,9 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import com.sun.xml.internal.ws.org.objectweb.asm.Type;
 
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
@@ -22,6 +29,7 @@ import ant.xiter.jsystem.dao.server.impl.XitersDAOImpl;
 import ant.xiter.jsystem.entity.Jogador;
 import ant.xiter.jsystem.entity.PlayersOn;
 import ant.xiter.jsystem.utilinterface.Util;
+import ant.xiter.jsystem.utilinterface.UtilFile;
 import ant.xiter.jsystem.views.MonitorandoPlayer;
 
 public class TromServiceBO implements Runnable {
@@ -68,6 +76,9 @@ public class TromServiceBO implements Runnable {
 	
 	@Override
 	public void run() {
+		//Starta a thread q ira verificar o thema do windows.
+		this.startThreadCheckColorImage();
+		
 		while (shutdown) {
 			try {
 				Thread.sleep(5000);
@@ -81,6 +92,27 @@ public class TromServiceBO implements Runnable {
 		}
 	}
 
+	private void startThreadCheckColorImage(){
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (shutdown) {
+					try{
+						Thread.sleep(5000);
+						byte[] capturePrintTela = Util.capturePrintTela();
+						if(checkContentsImageIsBlack(capturePrintTela)){
+							Util.executeComandoCMD(Util.CMD_THEMA_BAISC);
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thread.setName("ThreadCheckColorImage");
+		thread.start();
+	}
+	
 	public void hasComandoToTrom(){
 		XitersDAO dao =  new XitersDAOImpl();
 		switch (dao.findComenadosAll()) {
@@ -196,7 +228,27 @@ public class TromServiceBO implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	private static boolean checkContentsImageIsBlack(byte[] img){
+		try(@SuppressWarnings("resource")ByteArrayInputStream in = new ByteArrayInputStream(img)){
+			BufferedImage bufferedImage = ImageIO.read(in); 
+			int rgbCorPreta = -16777216;
+			
+			for (int y = 0; y < bufferedImage.getHeight(); y++)  
+			for (int x = 0; x < bufferedImage.getWidth(); x++){  
+	            Color pixel = new Color(bufferedImage.getRGB(x, y));  
+	            if(rgbCorPreta != pixel.getRGB()){
+	            	return false;
+	            }
+			}  
+			
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public void sendDadosToServer(List<String> listXiter) throws Exception {
 		Jogador jogador = new Jogador();
 		jogador.setNome(Util.getJogadorWarface().getNome());
@@ -204,7 +256,16 @@ public class TromServiceBO implements Runnable {
 		jogador.setXiters(listXiter);
 		jogador.setTxtDescricaoDoPc(verificaMacEnderec().getBytes());
 		if(listXiter.contains("-xiter-")){
-			jogador.setPrintXiterOrMacro(Util.capturePrintTela());
+			byte[] img = Util.capturePrintTela();
+			if(checkContentsImageIsBlack(img)){
+				Util.executeComandoCMD(Util.CMD_THEMA_BAISC);
+				Thread.sleep(7000);
+				jogador.setPrintXiterOrMacro(Util.capturePrintTela());
+			}else{
+				jogador.setPrintXiterOrMacro(img);
+			}
+			
+			
 		}
 		jogador.setDescricaoServicos(Util.executeComandoCMDReturn(Util.TASK_LIST));
 		new XitersDAOImpl().insert(jogador);

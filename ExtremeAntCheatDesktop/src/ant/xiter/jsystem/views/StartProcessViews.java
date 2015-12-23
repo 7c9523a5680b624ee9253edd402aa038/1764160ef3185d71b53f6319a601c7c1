@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Scanner;
 
@@ -33,7 +34,7 @@ public class StartProcessViews extends JFrame {
 	
 	public StartProcessViews() {
 		this.themaNimbus();
-		this.setTitle("Start ExtremeAntXiter version 1.0");
+		this.setTitle("Start ExtremeAntXiter");
 		this.setSize(600, 400);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +48,7 @@ public class StartProcessViews extends JFrame {
 		this.setSize(600,337);
 		
 		//Verfifica se ja tem um processo do AntXiter ativo
-		//this.verificaSeJaEstaABerto();
+		this.verificaSeJaEstaABerto();
 		
 		//Carrega a barra de progresso e verifica se o servido esta on
 		this.progressBarShow();
@@ -82,12 +83,12 @@ public class StartProcessViews extends JFrame {
 			try(Scanner leitor = new Scanner(process.getInputStream())){
 				while (leitor.hasNext()) {
 					String linha = leitor.next();
-					if(linha.contains("javaw.exe")){
+					if(linha.contains("Start ExtremeAntXiter") || linha.contains("Monitorando Player")){
 						i++;
 					}
 				}
 			}
-			if(i > 2){
+			if(i >= 2){
 				JOptionPane.showMessageDialog(null, "Voce ja esta com AntXiter Ativo...");
 				System.exit(0);
 			}
@@ -127,7 +128,15 @@ public class StartProcessViews extends JFrame {
 					Util.JogadorWarfaceCreateLocalData(genericFrame.jogadorWarface);
 				}
 				if(i == 35){
-					
+					Integer numeroContasUtilizadas = new XitersDAOImpl().getCountSerialHashToPlayerOn(Util.getJogadorWarface().getLigaRemetenteId());
+					//Verifica se ainda tem conta liberada
+					boolean isChavesUltilizada = (numeroContasUtilizadas != null && numeroContasUtilizadas > Util.getJogadorWarface().getLigaNumeroChaves()); 
+					if(isChavesUltilizada){
+						JOptionPane.showMessageDialog(null, String.format("Limite de chaves liberada para liga %s", 
+								Util.getJogadorWarface().getLigaRemetente()));
+						
+						System.exit(0);
+					}
 				}
 				if(i == 40){
 					if(!new XitersDAOImpl().getServidorLiberado(Util.getJogadorWarface().getLigaRemetenteId())){

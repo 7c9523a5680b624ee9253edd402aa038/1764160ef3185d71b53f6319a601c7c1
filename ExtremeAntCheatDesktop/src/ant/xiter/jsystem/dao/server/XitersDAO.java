@@ -30,4 +30,6 @@ public interface XitersDAO {
 	boolean sendRetornoByComando(byte[] retorno, int tipo,int usuario_id);
 
 	void deleteComandoAntXiterTrom(int id);
+	
+	Integer getCountSerialHashToPlayerOn(Integer id);
 }

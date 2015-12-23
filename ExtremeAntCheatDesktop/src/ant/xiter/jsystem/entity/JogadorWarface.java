@@ -16,6 +16,7 @@ public class JogadorWarface implements Serializable {
 	private String sexo;
 	private String ligaRemetente;
 	private int ligaRemetenteId;
+	private int ligaNumeroChaves;
 	private int codigoSala;
 	private byte[] fotoByte;
 	private int id;
@@ -106,6 +107,14 @@ public class JogadorWarface implements Serializable {
 	
 	public void setLigaRemetenteId(int ligaRemetenteId) {
 		this.ligaRemetenteId = ligaRemetenteId;
+	}
+	
+	public int getLigaNumeroChaves() {
+		return ligaNumeroChaves;
+	}
+	
+	public void setLigaNumeroChaves(int ligaNumeroChaves) {
+		this.ligaNumeroChaves = ligaNumeroChaves;
 	}
 
 	public void convertiInputStremToByte(InputStream inputStream , Long size){

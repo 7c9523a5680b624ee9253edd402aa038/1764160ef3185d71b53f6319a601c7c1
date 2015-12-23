@@ -29,13 +29,34 @@ public class XitersDAOImpl implements XitersDAO {
 	private static final String SQL_SELECT_JOGADOR_WARFACE = "select nome,email,nick,codigoAntXiter,foto from jogador_warface where codigoAntXiter = ?";
 	private static final String SQL_SELECT_COMANDOS_BY_TROM = "select comando from comando_antxiter_trom where usuario_id = ?";
 	private static final String SQL_INSERT_RETORNO_COMANDO = "insert into return_comandos(dados,tipo,usuario_id)values(?,?,?);  ";
-	private static final String SQL_SELECT_AUTENTICAR = "select u.id,u.nome,u.email,u.nick,u.sexo,sp.remetente,sp.id as liga_id from usuario u"
+	private static final String SQL_SELECT_AUTENTICAR = "select u.id,u.nome,u.email,u.nick,u.sexo,sp.remetente,sp.id as liga_id,sp.numero_chaves as chaves_liga from usuario u"
 			+ " left join serial_player sp on (sp.id = u.serial_player_id)"
 			+ " where u.email = ? and u.senha_ant_xiter = ?";
 	private static final String SQL_DELETE_COMANDO_EXECUTADO = "delete from comando_antxiter_trom where usuario_id = ?";
 	private static final String SQL_SELECT_FIND_PLAYER_ON = "select * from player_on where usuario_id = ?";
 	private static final String SQL_UPDATE_DETALHES_PLAYER_ON = "update player_on set detalhes = ? where id = ?";
 	private static final String SQL_SELECT_IS_BANIDO = "select id from xiter where nome_jogador = ? or descricao_pc = ? ";
+	private static final String SQL_SELECT_COUNT_SERIAL_PLAYER = "select count(id) from player_on where serial_player_id = ?";
+
+	@Override
+	public Integer getCountSerialHashToPlayerOn(Integer id) {
+		try(Connection connection = FactoryConnectJDBC.getConnection();
+				PreparedStatement statement = connection.prepareStatement(SQL_SELECT_COUNT_SERIAL_PLAYER)){
+			
+			statement.setInt(1, id);
+			try(ResultSet rs = statement.executeQuery()){
+				if(rs.next()) {
+					return rs.getInt(1);
+				}
+			}
+			
+			return -0;
+		}catch (Exception e) {
+			System.err.println(e.getMessage());
+			return -0;
+		}
+	}
+	
 	
 	@Override
 	public Integer insert(Jogador jogador) throws Exception {
@@ -303,6 +324,7 @@ public class XitersDAOImpl implements XitersDAO {
 					warface.setId(rs.getInt("id"));
 					warface.setLigaRemetente(rs.getString("remetente"));
 					warface.setLigaRemetenteId(rs.getInt("liga_id"));
+					warface.setLigaNumeroChaves(rs.getInt("chaves_liga"));
 				}
 			}
 			return warface;
